@@ -1,0 +1,462 @@
+
+#include<iostream>
+#include<string>
+#include<iomanip>
+#include<fstream>
+#include<sstream>
+#include<cstring>
+using namespace std;
+int i;
+int j=0;
+bool n(char array[],int n) {
+	bool p=false;
+	char a='a';
+	for(char h='A'; h<='Z'; h++) {
+
+		if(array[n]==h||array[n]==a||array[n]==' ')
+			p=true;
+		a++;
+
+	}
+	if(p)
+		return 1;
+	else
+		return 0;
+}
+bool IsValidCourseName(string courseName) {
+	char arr[50];
+	for(int j=0; j<50; j++) {
+		arr[j]=courseName[j];
+	}
+	int j;
+	int k=0;
+	int flag=1;
+	while(arr[k]!='\0') {
+		j=n(arr,k);
+		k++;
+		if(!j)
+			flag=0;
+	}
+	if(flag)
+		return 1;
+	else
+		return 0;
+}
+bool CheckAlpha(char array[],int p) {
+	char h='A';
+	bool f=0;
+	for(int i=0; i<=26; i++) {
+		if(array[p]==h)
+			f=1;
+		h++;
+	}
+	if(f==1) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+bool checkNumber(char array[],int w) {
+	char h='0';
+	bool f=0;
+	for(int i=0; i<11; i++) {
+		if(array[w]==h)
+			f=1;
+		h++;
+	}
+	if(f==1) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+bool IsValidCourseCode(string courseCode) {
+	char arr[5];
+	for(int h=0; h<5; h++) {
+		arr[h]=courseCode[h];
+	}
+	if(CheckAlpha(arr,0)&&CheckAlpha(arr,1)&&checkNumber(arr,2)&&checkNumber(arr,3)&&checkNumber(arr,4))
+		return 1;
+	else
+		return 0;
+
+}
+bool isValidCreditHours(int credit) {
+	int flag=0;
+	if(credit>0&&credit<=3)
+		flag=1;
+
+	return flag;
+}
+bool isValidSemester(int semester) {
+	int flag=0;
+	for(int k=1; k<=8; k++) {
+		if(semester==k)
+			flag=1;
+	}
+	return flag;
+}
+int search(string array[],string N,int length) {
+	int a=-1;
+	for(int i=0; i<length; i++) {
+		if(array[i]==N)
+			a=i;
+	}
+	return a;
+}
+int searchint(int array[],int N,int length,int arr[]) {
+	for(int r=0; r<50; r++) {
+		arr[r]=0;
+	}
+	int count=0;
+	int p=0;
+	for(int i=0; i<length; i++) {
+		if(array[i]==N) {
+			arr[p]=i;
+			p++;
+			count++;
+
+		}
+	}
+	return count;
+}
+void deletecourse(string codelist[],string namelist[],int creditlist[],int semesterlist[],string code,string name,int credit,int semester,int size) {
+	int f=-1;
+	cout<<"Enter course code";
+	cin>>code;
+	cin.clear();
+	if(IsValidCourseCode(code)==0)
+		do {
+
+			cout<<"Invalid Course code"<<endl;
+			cout<<"Enter course code again"<<endl;
+			cin>>code;
+		} while(IsValidCourseCode(code)==0);
+
+
+	for(int i=0; i<size; i++) {
+		if(codelist[i]==code) {
+			f=i;
+		}
+		if(f!=-1) {
+			codelist[i]=" ";
+			namelist[i]=" ";
+			creditlist[i]=0;
+			semesterlist[i]=0;
+			cout<<"Course has been deleted successfully!";
+		}
+	}
+	if(f==-1)
+		cout<<"Course code does not exist!";
+}
+void updatecourse(string codelist[],string namelist[],int creditlist[],int semesterlist[],string code,string name,int credit,int semester) {
+	if(IsValidCourseCode(code)==0)
+		do {
+
+			cout<<"Invalid Course code"<<endl;
+			cout<<"Enter course code again"<<endl;
+			cin>>code;
+		} while(IsValidCourseCode(code)==0);
+	int index=search(codelist,code,50);
+	if(index!=-1) {
+		cout<<"Enter the new details of course:";
+		cin>>code>>credit>>semester;
+		getline(cin,name);
+		if(IsValidCourseCode(code)&&isValidCreditHours(credit)&&isValidSemester(semester)&&IsValidCourseName(name)) {
+			codelist[index]=code;
+			creditlist[index]=credit;
+			semesterlist[index]=semester;
+			namelist[index]=name;
+
+		} else if(IsValidCourseCode(code)==0||isValidCreditHours(credit)==0||isValidSemester(semester)==0||IsValidCourseName(name)==0) {
+			if(IsValidCourseName(name)==0)
+				do {
+
+					cout<<"Invalid name"<<endl;
+					cout<<"Enter name again"<<endl;
+					cin>>name;
+				} while(IsValidCourseName(name)==0);
+			if(IsValidCourseCode(code)==0)
+				do {
+
+					cout<<"Invalid Course code"<<endl;
+					cout<<"Enter course code again"<<endl;
+					cin>>code;
+				} while(IsValidCourseCode(code)==0);
+			if(isValidCreditHours(credit)==0)
+				do {
+
+					cout<<"Invalid Credit Hours code"<<endl;
+					cout<<"Enter credit hours again"<<endl;
+					cin>>credit;
+				} while(isValidCreditHours(credit)==0);
+
+			if(isValidSemester(semester)==0)
+				do {
+
+					cout<<"Invalid Semester"<<endl;
+					cout<<"Enter semester again"<<endl;
+					cin>>semester;
+				} while(isValidSemester(semester)==0);
+
+
+			codelist[index]=code;
+			creditlist[index]=credit;
+			semesterlist[index]=semester;
+			namelist[index]=name;
+
+		}
+		cout<<"Course has been updated successfully!\n";
+	} else
+		cout<<"Course code does not exist!";
+}
+void addcourse(string codelist[],string namelist[],int creditlist[],int semesterlist[],string code,string name,int credit,int semester) {
+
+	int f=0;
+
+	for(int y=0; y<i; y++) {
+		if(codelist[y]==code) {
+			f=1;
+			cout<<"This course code is already added\n";
+			break;
+		}
+	}
+	if(f==0) {
+		if(IsValidCourseCode(code)&&isValidCreditHours(credit)&&isValidSemester(semester)&&IsValidCourseName(name)) {
+			codelist[i]=code;
+			creditlist[i]=credit;
+			semesterlist[i]=semester;
+			namelist[i]=name;
+			i++;
+			cout<<"Course has been added successfully!\n";
+		} else if(IsValidCourseCode(code)==0||isValidCreditHours(credit)==0||isValidSemester(semester)==0||IsValidCourseName(name)==0) {
+			if(IsValidCourseName(name)==0)
+				do {
+
+					cout<<"Invalid name"<<endl;
+					cout<<"Enter name again"<<endl;
+					cin>>name;
+				} while(IsValidCourseName(name)==0);
+			if(IsValidCourseCode(code)==0)
+				do {
+
+					cout<<"Invalid Course code"<<endl;
+					cout<<"Enter course code again"<<endl;
+					cin>>code;
+				} while(IsValidCourseCode(code)==0);
+			if(isValidCreditHours(credit)==0)
+				do {
+
+					cout<<"Invalid Credit Hours code"<<endl;
+					cout<<"Enter credit hours again"<<endl;
+					cin>>credit;
+				} while(isValidCreditHours(credit)==0);
+
+			if(isValidSemester(semester)==0)
+				do {
+
+					cout<<"Invalid Semester"<<endl;
+					cout<<"Enter semester again"<<endl;
+					cin>>semester;
+				} while(isValidSemester(semester)==0);
+
+
+			codelist[i]=code;
+			creditlist[i]=credit;
+			semesterlist[i]=semester;
+			namelist[i]=name;
+			i++;
+			cout<<"Course has been added successfully!\n";
+		}
+	}
+
+}
+void viewCourse(string codelist[],string namelist[],int creditlist[],int semesterlist[]) {
+	cout<<left<<setw(15)<<"Course code"<<setw(30)<<"Course Name"<<setw(15)<<"Credit Hours"<<setw(15)<<"Semester"<<endl;
+	for(int g=0; g<i; g++) {
+		if(codelist[g]!=" ")
+			cout<<left<<setw(15)<<codelist[g]<<setw(30)<<namelist[g]<<setw(15)<<creditlist[g]<<setw(15)<<semesterlist[g]<<endl;
+	}
+}
+void ViewSemesterCourse(string codelist[],string namelist[],int creditlist[],int semesterlist[],int semester) {
+	cout<<"Enter the semester :";
+	cin>>semester;
+	cin.clear();
+	int p[10]= {0};
+	int f=0;
+	cout<<left<<setw(15)<<"Course code"<<setw(30)<<"Course Name"<<setw(15)<<"Credit Hours"<<setw(15)<<"Semester"<<endl;
+	for(int y=0; y<i; y++) {
+		if(semesterlist[y] == semester) {
+			f=1;
+			{
+				cout<<left<<setw(15)<<codelist[y]<<setw(30)<<namelist[y]<<setw(15)<<creditlist[y]<<setw(15)<<semesterlist[y]<<endl;
+			}
+		}
+	}
+	if(f!=1)
+		cout<<"No Courses of this semester exist!"<<endl;
+
+}
+bool saveCourses(string codelist[],string namelist[],int creditlist[],int semesterlist[]) {
+	ofstream data;
+	data.open("courses.txt");
+	for(int u=0; u<i; u++) {
+		data<<codelist[u]<<","<<namelist[u]<<","<<creditlist[u]<<","<<semesterlist[u]<<endl;
+	}
+	data.close();
+}
+void ff(string codelist[],string namelist[],int creditlist[],int semesterlist[],int y) {
+
+}
+bool loadCourses(string codelist[],string namelist[],int creditlist[],int semesterlist[]) {
+	ifstream input;
+	string crd;
+	string sem;
+	input.open("courses.txt");
+	string line;
+	for(int y=0; y<=i; y++) {
+		getline(input,line);
+		stringstream ss(line);
+		getline(ss,codelist[y],',');
+		getline(ss,namelist[y],',');
+		getline(ss,crd,',');
+		getline(ss,sem,',');
+		creditlist[y]=crd[0]-48;
+		semesterlist[y]=sem[0]-48;
+	}
+	input.close();
+}
+bool loadUsers(string userlist[],string passwordlist[]) {
+	ifstream userdata;
+	userdata.open("Users.txt");
+	string line;
+	int y=0;
+	while(userdata.peek()!=EOF) {
+		getline(userdata,line);
+		stringstream ss(line);
+		getline(ss,userlist[y],',');
+		getline(ss,passwordlist[y],',');
+		y++;
+		j++;
+	}
+	userdata.close();
+}
+int main() {
+	string code;
+	int op;
+	string codelist[50];
+	int credit;
+	int creditlist[50];
+	int semester;
+	int semesterlist[50];
+	string name;
+	string namelist[50];
+	string user;
+	string password;
+	string userlist[50];
+	string passwordlist[50];
+	int r=0;
+	loadUsers(userlist,passwordlist);
+	do {
+		do {
+			r=0;
+			cout<<"**Welcome to University Management System**"<<endl<<endl;
+			cout<<"Dear user, current software is intented for authorized users only.\nLogin to the system to get access."<<endl;
+			cout<<"Username: ";
+			cin>>user;
+			cout<<"Password: ";
+			cin>>password;
+			cout<<endl<<endl;
+
+			for(int y=0; y<j; y++) {
+				if(user==userlist[y])
+					if(password==passwordlist[y])
+						r=1;
+			}
+			if(r==1) {
+
+
+				int y;
+				cout<<"You have successfully logged in"<<endl;
+				cout<<"Choose following option:"<<endl;
+				cout<<"1	Add Course"<<endl;
+				cout<<"2	Update Course"<<endl;
+				cout<<"3	Delete Course"<<endl;
+				cout<<"4	View All Course"<<endl;
+				cout<<"5	View Courses of semester"<<endl;
+				cout<<"6	Logout from the system"<<endl;
+				cout<<"7	Exit Prgram"<<endl;
+				cout<<"Choose the option(Number) :";
+				cin>>op;
+				cin.clear();
+				while(op!=7) {
+
+					switch(op) {
+						case 1: {
+							cout<<"Enter the course details (code,credit hours,semester,name):";
+							cin>>code>>credit>>semester;
+							cin.ignore('\n' , ' ');
+							getline(cin,name);
+							addcourse(codelist,namelist,creditlist,semesterlist,code,name,credit,semester);
+							cin.clear();
+							break;
+						}
+						case 2: {
+							cout<<"Enter course code:";
+							cin>>code;
+							updatecourse(codelist,namelist,creditlist,semesterlist,code,name,credit,semester);
+							cin.clear();
+							break;
+						}
+						case 3: {
+							deletecourse(codelist,namelist,creditlist,semesterlist,code,name,credit,semester,i);
+							break;
+						}
+
+						case 4: {
+							viewCourse(codelist,namelist,creditlist,semesterlist);
+							break;
+						}
+
+						case 5: {
+							ViewSemesterCourse(codelist,namelist,creditlist,semesterlist,semester);
+						}
+						break;
+						case 6: {
+							break;
+						}
+						case 7: {
+
+							break;
+						}
+						default: {
+							cin.ignore(15 , '\n');
+							cout<<"Your input is invalid.Enter the option again.\n";
+							break;
+						}
+
+					}
+					if(op!=6)
+					{
+					cout<<"Choose the option :";
+					cin>>op;
+                }
+                if(op==6)
+                {
+                	break;
+				}
+				}
+				saveCourses(codelist,namelist,creditlist,semesterlist);
+				loadCourses(codelist,namelist,creditlist,semesterlist);
+
+			} else {
+				cout<<"Dear User, Username/password is incorrect."<<endl;
+				cout<<"Enter username/password again to get access to the system "<<endl;
+				cout<<"Username: "<<user<<endl;
+				cout<<"Password: "<<password<<endl;
+			}
+		} while(r!=1);
+	} while(op==6);
+
+	return 0;
+}
